@@ -34,7 +34,7 @@ def get_offset_mouse_position(offset):
 
 
 class Window(Node):
-    def __init__(self, size: Point, fps: int):
+    def __init__(self, size: Point, fps: int, name="Gleba Project", mouse_visible: bool=True):
         super().__init__()
 
         self.window = self  # Look at me, I am the window now
@@ -46,6 +46,8 @@ class Window(Node):
 
         self.keys_pressed = {}  # pygame.key.get_pressed()
 
+        pygame.display.set_caption(name)
+        if not mouse_visible: pygame.mouse.set_visible(False)
     def run(self):
         pygame.init()
         running = True
