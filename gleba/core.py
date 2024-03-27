@@ -14,6 +14,7 @@ class Node:  # The base class for all nodes
         child.parent = self
         child.window = self.window
         self.children.append(child)
+        child.ready()
 
     def remove_self(self):
         self.parent.children.remove(self)
@@ -21,6 +22,9 @@ class Node:  # The base class for all nodes
     def update(self):
         for child in self.children:
             child.update()
+
+    def ready(self):
+        pass
 
 
 def get_mouse_position():
@@ -67,3 +71,28 @@ class Window(Node):
 
             pygame.display.flip()
             clock.tick(self.fps)
+
+
+class Timer(Node):
+    def __init__(self, secs, self_destruct=False):
+        super().__init__()
+        self.secs = secs
+
+        self.self_destruct = self_destruct
+        self.time_left = -1
+
+    def update(self):
+        if self.time_left == 0:
+            if self.self_destruct:
+                self.remove_self()
+            else:
+                self.ready()
+            self.timeout()
+        self.time_left -= 1
+        super().update()
+
+    def ready(self):
+        self.time_left = self.secs * self.window.fps
+
+    def timeout(self):
+        pass
