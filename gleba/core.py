@@ -19,6 +19,11 @@ class Node:  # The base class for all nodes
         self.children.append(child)
 
     def remove_self(self):
+        if isinstance(self, Window):
+            self.running = False
+            del self
+            return
+
         self.parent.children.remove(self)
 
     def update(self):
@@ -89,9 +94,6 @@ class Window(Node):
 
             pygame.display.flip()
             clock.tick(self.fps)
-
-    def quit(self):
-        self.running = False
 
 
 class Timer(Node):
