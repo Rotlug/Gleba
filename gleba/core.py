@@ -105,7 +105,7 @@ class Timer(Node):
             else:
                 self.ready()
 
-        if self.time_left == 0:
+        if self.time_left <= 0:
             self.emit("timeout")
 
         self.time_left -= 1

@@ -8,7 +8,7 @@
 
 כדי להתחיל:
 ```python
-from gleba.graphics import *
+from gleba import *
 
 window = Window(
     size=Point(600, 800),
