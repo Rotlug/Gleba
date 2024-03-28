@@ -97,12 +97,15 @@ class Timer(Node):
         self.time_left = -1
 
     def update(self):
-        if self.time_left == 0:
+        if self.is_active("timeout"):
             if self.self_destruct:
                 self.remove_self()
             else:
                 self.ready()
+
+        if self.time_left == 0:
             self.emit("timeout")
+
         self.time_left -= 1
         super().update()
 
