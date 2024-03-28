@@ -63,7 +63,8 @@ class Window(Node):
 
         self.screen = pygame.display.set_mode(self.size.to_tuple())
 
-        self.keys_pressed = {}  # pygame.key.get_pressed()
+        self.keys_pressed = None  # pygame.key.get_pressed()
+        self.events = None  # pygame.event.get()
 
         pygame.display.set_caption(name)
         if not mouse_visible:
@@ -77,8 +78,9 @@ class Window(Node):
         # Game loop
         while running:
             self.keys_pressed = pygame.key.get_pressed()
+            self.events = pygame.event.get()
 
-            for event in pygame.event.get():  # Quit on close button
+            for event in self.events:  # Quit on close button
                 if event.type == pygame.QUIT:
                     running = False
 
