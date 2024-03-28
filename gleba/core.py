@@ -66,28 +66,32 @@ class Window(Node):
         self.keys_pressed = None  # pygame.key.get_pressed()
         self.events = None  # pygame.event.get()
 
+        self.running = True
+
         pygame.display.set_caption(name)
         if not mouse_visible:
             pygame.mouse.set_visible(False)
 
     def run(self):
         pygame.init()
-        running = True
         clock = pygame.time.Clock()
 
         # Game loop
-        while running:
+        while self.running:
             self.keys_pressed = pygame.key.get_pressed()
             self.events = pygame.event.get()
 
             for event in self.events:  # Quit on close button
                 if event.type == pygame.QUIT:
-                    running = False
+                    quit()
 
             super().update()
 
             pygame.display.flip()
             clock.tick(self.fps)
+
+    def quit(self):
+        self.running = False
 
 
 class Timer(Node):
