@@ -12,6 +12,8 @@ class Node:  # The base class for all nodes
         self.active_signals: list[str] = []
         self.signals_to_remove: list[str] = []  # This list is to make sure that signals get emitted only once
 
+        self.paused = False
+
     def add_child(self, child):
         child.parent = self
         child.window = self.window
@@ -110,7 +112,7 @@ class Timer(Node):
             else:
                 self.ready()
 
-        if self.time_left == 0:
+        if self.time_left <= 0:
             self.emit("timeout")
 
         self.time_left -= 1
