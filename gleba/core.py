@@ -9,12 +9,14 @@ class Node:  # The base class for all nodes
         self.window = None
 
         self.name = str(type(self))
+        self.active_signals: list[str] = []
+        self.signals_to_remove: list[str] = []  # This list is to make sure that signals get emitted only once
 
     def add_child(self, child):
         child.parent = self
         child.window = self.window
-        self.children.append(child)
         child.ready()
+        self.children.append(child)
 
     def remove_self(self):
         self.parent.children.remove(self)
@@ -23,8 +25,21 @@ class Node:  # The base class for all nodes
         for child in self.children:
             child.update()
 
+        for signal in self.signals_to_remove:
+            self.signals_to_remove.remove(signal)
+            self.active_signals.remove(signal)
+
+        for signal in self.active_signals:
+            self.signals_to_remove.append(signal)
+
     def ready(self):
         pass
+
+    def emit(self, signal):
+        self.active_signals.append(signal)
+
+    def is_active(self, signal):
+        return signal in self.active_signals
 
 
 def get_mouse_position():
@@ -87,12 +102,9 @@ class Timer(Node):
                 self.remove_self()
             else:
                 self.ready()
-            self.timeout()
+            self.emit("timeout")
         self.time_left -= 1
         super().update()
 
     def ready(self):
         self.time_left = self.secs * self.window.fps
-
-    def timeout(self):
-        pass
