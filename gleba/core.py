@@ -19,11 +19,6 @@ class Node:  # The base class for all nodes
         self.children.append(child)
 
     def remove_self(self):
-        if isinstance(self, Window):
-            self.running = False
-            del self
-            return
-
         self.parent.children.remove(self)
 
     def update(self):
@@ -71,9 +66,10 @@ class Window(Node):
         self.keys_pressed = None  # pygame.key.get_pressed()
         self.events = None  # pygame.event.get()
 
+        pygame.display.set_caption(name)
+
         self.running = True
 
-        pygame.display.set_caption(name)
         if not mouse_visible:
             pygame.mouse.set_visible(False)
 
@@ -95,6 +91,9 @@ class Window(Node):
             pygame.display.flip()
             clock.tick(self.fps)
 
+    def stop(self):
+        self.running = False
+
 
 class Timer(Node):
     def __init__(self, secs, self_destruct=False):
@@ -111,7 +110,7 @@ class Timer(Node):
             else:
                 self.ready()
 
-        if self.time_left <= 0:
+        if self.time_left == 0:
             self.emit("timeout")
 
         self.time_left -= 1
