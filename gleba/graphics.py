@@ -41,20 +41,28 @@ class BackgroundColor(Node):
 
 
 class Image(Node2D):
-    def __init__(self, path: str, position: Point, size: Point):
+    def __init__(self, path: str, position: Point, size: Point, color=(255, 255, 255, 255)):
         super().__init__(position)
 
-        self.img: pygame.image = None  # The image itself
+          # The image itself
 
+        self.img = None
         self.path = path
         self.size = size
 
         self.rotation = 0
+        self.color = color
 
     def update(self):
         super().update()
 
         self.img = pygame.image.load(self.path)
+
+        self.img = self.img.copy()
+
+        if self.color != (255, 255, 255, 255):
+            self.img.fill(self.color, None, pygame.BLEND_RGBA_MULT)
+
         self.img = pygame.transform.scale(self.img, self.size.to_tuple())
 
         if self.rotation != 0:
