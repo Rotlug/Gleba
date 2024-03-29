@@ -30,7 +30,7 @@ window.run()
 rect = Rect(
     size=Point(64, 64),
     position=Point(0, 0),
-    color=(255, 0, 0)
+    color=Color(255, 0, 0)
 )
 
 window.add_child(rect)
