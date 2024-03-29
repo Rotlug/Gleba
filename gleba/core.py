@@ -6,16 +6,19 @@ class Node:  # The base class for all nodes
     def __init__(self):
         self.parent = None
         self.children = []
+
         self.window = None
 
-        self.name = str(type(self))
+        self.name = type(self).__name__
         self.active_signals: list[str] = []
         self.signals_to_remove: list[str] = []  # This list is to make sure that signals get emitted only once
 
     def add_child(self, child):
         child.parent = self
         child.window = self.window
+
         child.ready()
+
         self.children.append(child)
 
     def remove_self(self):
