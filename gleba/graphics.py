@@ -2,10 +2,12 @@ from gleba.core import *
 
 
 class Node2D(Node):  # Base node for all 2D Objects
-    def __init__(self, initial_position: Point):
+    def __init__(self, position: Point):
         super().__init__()
-        self.position = initial_position
+        self.position = position
         self.offset = Point(0, 0)
+        self.color = Color(255, 255, 255)
+        self.rotation = 0
 
     def get_position(self):
         return Point(self.position.x + self.offset.x, self.position.y + self.offset.y)
@@ -13,7 +15,23 @@ class Node2D(Node):  # Base node for all 2D Objects
     def update(self):
         if isinstance(self.parent, Node2D):
             self.offset = self.parent.position
+
         super().update()
+
+    def render(self, surface: pygame.Surface, rect=None):
+        if self.color.a != 255:  # Alpha
+            surface.set_alpha(self.color.a)
+        if self.color.to_rgb() != (255, 255, 255):  # Modulate
+            surface.fill(self.color.to_rgb(), surface.get_rect(), pygame.BLEND_RGBA_MULT)
+
+        if self.rotation != 0:
+            surface = pygame.transform.rotate(surface, self.rotation)
+
+        # If the rect variable is defined, render using that, if not, just render using the position.
+        if rect:
+            self.window.screen.blit(surface, rect)
+        else:
+            self.window.screen.blit(surface, self.get_position().to_tuple())
 
 
 class Rect(Node2D):
@@ -24,10 +42,9 @@ class Rect(Node2D):
 
     def update(self):
         super().update()
-        pos = self.get_position()
-
-        rect = pygame.Rect(pos.x, pos.y, self.size.x, self.size.y)
-        pygame.draw.rect(self.window.screen, self.color, rect)
+        surface = pygame.Surface(self.size.to_tuple()).convert_alpha()
+        surface.fill(self.color.to_rgb())
+        self.render(surface)
 
 
 class BackgroundColor(Node):
@@ -37,43 +54,28 @@ class BackgroundColor(Node):
 
     def update(self):
         super().update()  # Not really needed because why would a Background Color have children?
-        self.window.screen.fill(self.color)
+        self.window.screen.fill(self.color.to_tuple())
 
 
 class Image(Node2D):
-    def __init__(self, path: str, position: Point, size: Point, color=(255, 255, 255, 255)):
+    def __init__(self, path: str, position: Point, size: Point):
         super().__init__(position)
 
-          # The image itself
-
-        self.img = None
         self.path = path
         self.size = size
 
-        self.rotation = 0
-        self.color = color
-
     def update(self):
         super().update()
-
-        self.img = pygame.image.load(self.path)
-
-        self.img = self.img.copy()
-
-        self.img = pygame.transform.scale(self.img, self.size.to_tuple())
-
-        if self.rotation != 0:
-            self.img = pygame.transform.rotate(self.img, self.rotation)
+        surface = pygame.image.load(self.path)
+        surface = pygame.transform.scale(surface, self.size.to_tuple())
 
         # This is so the image is rotated around it's center and not around the top left
-        rect = self.img.get_rect(center=self.get_position().to_tuple())
+        rect = surface.get_rect(center=self.get_position().to_tuple())
 
-        if self.color != (255, 255, 255, 255):
-            self.img.fill(self.color, self.img.get_rect(), pygame.BLEND_RGBA_MULT)
-
-        self.window.screen.blit(self.img, rect)
+        self.render(surface, rect)
 
     def center_offset(self):
         # The image is centered so offset the position
         self.position.x += self.size.x // 2
         self.position.y += self.size.y // 2
+
