@@ -60,9 +60,6 @@ class Image(Node2D):
 
         self.img = self.img.copy()
 
-        if self.color != (255, 255, 255, 255):
-            self.img.fill(self.color, None, pygame.BLEND_RGBA_MULT)
-
         self.img = pygame.transform.scale(self.img, self.size.to_tuple())
 
         if self.rotation != 0:
@@ -70,6 +67,10 @@ class Image(Node2D):
 
         # This is so the image is rotated around it's center and not around the top left
         rect = self.img.get_rect(center=self.get_position().to_tuple())
+
+        if self.color != (255, 255, 255, 255):
+            self.img.fill(self.color, self.img.get_rect(), pygame.BLEND_RGBA_MULT)
+
         self.window.screen.blit(self.img, rect)
 
     def center_offset(self):
