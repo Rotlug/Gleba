@@ -1,7 +1,7 @@
 import pygame
 from gleba.util import *
 
-pygame.init()
+#pygame.init()
 
 
 class Node:  # The base class for all nodes
@@ -15,6 +15,8 @@ class Node:  # The base class for all nodes
         self.active_signals: list[str] = []
         self.signals_to_remove: list[str] = []  # This list is to make sure that signals get emitted only once
 
+        self.is_ready = False
+
     def add_child(self, child):
         child.parent = self
         child.window = self.window
@@ -22,13 +24,15 @@ class Node:  # The base class for all nodes
         child.ready()
 
         self.children.append(child)
+        child.is_ready = True
 
     def remove_self(self):
         self.parent.children.remove(self)
 
     def update(self):
         for child in self.children:
-            child.update()
+            if child.is_ready:
+                child.update()
 
         for signal in self.signals_to_remove:
             self.signals_to_remove.remove(signal)
@@ -60,7 +64,7 @@ def get_offset_mouse_position(offset):
 class Window(Node):
     def __init__(self, size: Point, fps: int, name="Gleba Project", mouse_visible: bool = True):
         super().__init__()
-
+        self.is_ready = True
         self.window = self  # Look at me, I am the window now
 
         self.size = size
@@ -72,6 +76,7 @@ class Window(Node):
         self.events = None  # pygame.event.get()
 
         pygame.display.set_caption(name)
+        pygame.init()
 
         self.running = True
 
@@ -79,7 +84,6 @@ class Window(Node):
             pygame.mouse.set_visible(False)
 
     def run(self):
-        pygame.init()
         clock = pygame.time.Clock()
 
         # Game loop
