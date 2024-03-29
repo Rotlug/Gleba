@@ -3,7 +3,9 @@
 מחלקות עזר לפי-גיים
 
 ![גיף מוזר](https://github.com/Rotlug/Gleba/blob/master/weird.gif?raw=true)
-## איך משתמשים???
+
+## האובייקטים
+![](https://raw.githubusercontent.com/Rotlug/Gleba/master/objects.png)
 כל אובייקט בגלבה הוא "חוליה" (Node)
 
 כדי להתחיל:
