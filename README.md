@@ -6,6 +6,8 @@
 
 ## האובייקטים
 ![](https://raw.githubusercontent.com/Rotlug/Gleba/master/objects.png)
+
+
 כל אובייקט בגלבה הוא "חוליה" (Node)
 
 כדי להתחיל:
