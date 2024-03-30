@@ -18,7 +18,7 @@ class Node2D(Node):  # Base node for all 2D Objects
 
         super().update()
 
-    def render(self, surface: pygame.Surface, rect=None):
+    def render(self, surface: pygame.Surface, centered=True):
         if self.color.a != 255:  # Alpha
             surface.set_alpha(self.color.a)
         if self.color.to_rgb() != (255, 255, 255):  # Modulate
@@ -28,7 +28,8 @@ class Node2D(Node):  # Base node for all 2D Objects
             surface = pygame.transform.rotate(surface, self.rotation)
 
         # If the rect variable is defined, render using that, if not, just render using the position.
-        if rect:
+        if centered:
+            rect = surface.get_rect(center=self.get_position().to_tuple())
             self.window.screen.blit(surface, rect)
         else:
             self.window.screen.blit(surface, self.get_position().to_tuple())
@@ -69,10 +70,7 @@ class Image(Node2D):
         surface = pygame.image.load(self.path)
         surface = pygame.transform.scale(surface, self.size.to_tuple())
 
-        # This is so the image is rotated around it's center and not around the top left
-        rect = surface.get_rect(center=self.get_position().to_tuple())
-
-        self.render(surface, rect)
+        self.render(surface, True)
 
     def center_offset(self):
         # The image is centered so offset the position
