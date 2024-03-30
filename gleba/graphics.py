@@ -49,7 +49,7 @@ class Rect(Node2D):
 
 
 class BackgroundColor(Node):
-    def __init__(self, color):
+    def __init__(self, color=Color(0, 0, 0)):
         super().__init__()
         self.color = color
 
@@ -59,21 +59,16 @@ class BackgroundColor(Node):
 
 
 class Image(Node2D):
-    def __init__(self, path: str, position: Point, size: Point):
+    def __init__(self, path: str, position: Point, size: Point, centered=False):
         super().__init__(position)
 
         self.path = path
         self.size = size
+        self.centered = centered
 
     def update(self):
         super().update()
         surface = pygame.image.load(self.path)
         surface = pygame.transform.scale(surface, self.size.to_tuple())
 
-        self.render(surface, True)
-
-    def center_offset(self):
-        # The image is centered so offset the position
-        self.position.x += self.size.x // 2
-        self.position.y += self.size.y // 2
-
+        self.render(surface, self.centered)
