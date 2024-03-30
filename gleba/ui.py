@@ -19,9 +19,10 @@ class Text(Node2D):
         self.font_color = font_color
 
     def ready(self):
-        self.update_text()
+        self.update_text(self.text)
 
-    def update_text(self):
+    def update_text(self, text):
+        self.text = text
         self.surface = self.font.get_font().render(self.text, False, self.font_color.to_tuple())
 
 
