@@ -64,9 +64,9 @@ def get_offset_mouse_position(offset):
 class Window(Node):
     def __init__(self, size: Point, fps: int, name="Gleba Project", mouse_visible: bool = True):
         super().__init__()
-        self.is_ready = True
         self.window = self  # Look at me, I am the window now
 
+        self.is_ready = True
         self.size = size
         self.fps = fps
 
@@ -111,7 +111,8 @@ class Timer(Node):
         self.secs = secs
 
         self.self_destruct = self_destruct
-        self.time_left = -1
+        self.time_left = 0
+        self.max_value = 0
 
     def update(self):
         if self.is_active("timeout"):
@@ -127,4 +128,10 @@ class Timer(Node):
         super().update()
 
     def ready(self):
-        self.time_left = self.secs * self.window.fps
+        self.max_value = self.secs * self.window.fps
+        self.time_left = self.max_value
+
+    def get_percent(self):  # From 0 to 1
+        if self.time_left <= 0:
+            return 0
+        return self.time_left / self.max_value

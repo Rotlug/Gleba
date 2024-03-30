@@ -28,3 +28,25 @@ class Text(Node2D):
     def update(self):
         if self.surface:
             self.render(self.surface)
+
+
+class ProgressBar(Node2D):
+    def __init__(self, position, foreground: Node2D, background: Node2D, timer: Timer):
+        super().__init__(position)
+
+        self.background = background
+        self.foreground = foreground
+
+        self.foreground.clip = Point(self.foreground.size.x, self.foreground.size.y)
+
+        self.max_x = foreground.size.x
+        self.timer = timer
+
+    def ready(self):
+        self.add_child(self.background)
+        self.add_child(self.foreground)
+        self.add_child(self.timer)
+
+    def update(self):
+        super().update()
+        self.foreground.clip.x = self.max_x * self.timer.get_percent()

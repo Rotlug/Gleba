@@ -9,16 +9,17 @@ class Node2D(Node):  # Base node for all 2D Objects
         self.color = Color(255, 255, 255)
         self.rotation = 0
 
+        self.clip = None
+
     def get_position(self):
         return Point(self.position.x + self.offset.x, self.position.y + self.offset.y)
 
     def update(self):
         if isinstance(self.parent, Node2D):
             self.offset = self.parent.position
-
         super().update()
 
-    def render(self, surface: pygame.Surface, centered=True):
+    def render(self, surface: pygame.Surface, centered=False):
         if self.color.a != 255:  # Alpha
             surface.set_alpha(self.color.a)
         if self.color.to_rgb() != (255, 255, 255):  # Modulate
@@ -26,6 +27,10 @@ class Node2D(Node):  # Base node for all 2D Objects
 
         if self.rotation != 0:
             surface = pygame.transform.rotate(surface, self.rotation)
+
+        # If clip is defined, clip the surface
+        if self.clip:
+            surface = surface.subsurface((0, 0, self.clip.x, self.clip.y))
 
         # If the rect variable is defined, render using that, if not, just render using the position.
         if centered:
