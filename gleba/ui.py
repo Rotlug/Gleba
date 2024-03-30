@@ -1,4 +1,5 @@
 from gleba.graphics import *
+from copy import copy
 
 
 class Font:
@@ -11,11 +12,12 @@ class Font:
 
 
 class Text(Node2D):
-    def __init__(self, text, position, font: Font, font_color):
+    def __init__(self, text, position, font: Font, font_color=Color(255, 255, 255), centered=False):
         super().__init__(position)
         self.text = text
         self.font = font
         self.font_color = font_color
+        self.centered = centered
 
         self.surface = None
 
@@ -27,7 +29,7 @@ class Text(Node2D):
 
     def update(self):
         if self.surface:
-            self.render(self.surface)
+            self.render(self.surface, centered=self.centered)
 
 
 class ProgressBar(Node2D):
@@ -37,7 +39,7 @@ class ProgressBar(Node2D):
         self.background = background
         self.foreground = foreground
 
-        self.foreground.clip = Point(self.foreground.size.x, self.foreground.size.y)
+        self.foreground.clip = copy(self.foreground.size)
 
         self.max_x = foreground.size.x
         self.timer = timer

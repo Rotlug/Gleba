@@ -1,8 +1,6 @@
 import pygame
 from gleba.util import *
 
-#pygame.init()
-
 
 class Node:  # The base class for all nodes
     def __init__(self):
