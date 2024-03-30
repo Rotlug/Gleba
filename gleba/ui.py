@@ -17,9 +17,6 @@ class Text(Node2D):
         self.text = text
         self.font = font
         self.font_color = font_color
-        self.centered = centered
-
-        self.surface = None
 
     def ready(self):
         self.update_text()
@@ -27,28 +24,20 @@ class Text(Node2D):
     def update_text(self):
         self.surface = self.font.get_font().render(self.text, False, self.font_color.to_tuple())
 
-    def update(self):
-        if self.surface:
-            self.render(self.surface, centered=self.centered)
-
 
 class ProgressBar(Node2D):
-    def __init__(self, position, foreground: Node2D, background: Node2D, timer: Timer):
+    def __init__(self, position, foreground: Node2D, background: Node2D):
         super().__init__(position)
 
         self.background = background
         self.foreground = foreground
 
         self.foreground.clip = copy(self.foreground.size)
-
         self.max_x = foreground.size.x
-        self.timer = timer
 
     def ready(self):
         self.add_child(self.background)
         self.add_child(self.foreground)
-        self.add_child(self.timer)
 
-    def update(self):
-        super().update()
-        self.foreground.clip.x = self.max_x * self.timer.get_percent()
+    def set_value(self, val):
+        self.foreground.clip.x = (1-val) * self.max_x
