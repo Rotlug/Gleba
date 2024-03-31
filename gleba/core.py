@@ -104,6 +104,7 @@ class Window(Node):
         self.running = False
         self.children = []
 
+
 class Timer(Node):
     def __init__(self, seconds, self_destruct=False):
         super().__init__()
