@@ -104,15 +104,19 @@ class Window(Node):
         self.running = False
         self.children = []
 
-
 class Timer(Node):
-    def __init__(self, secs, self_destruct=False):
+    def __init__(self, seconds, self_destruct=False):
         super().__init__()
-        self.secs = secs*2  # Why is x2?
 
         self.self_destruct = self_destruct
-        self.time_left = -1
-        self.max_value = -1
+
+        self.seconds = seconds
+        self.destination_time = -1
+        self.init_time = -1
+
+    def ready(self):
+        self.init_time = pygame.time.get_ticks()
+        self.destination_time = self.init_time + (self.seconds * 1000)
 
     def update(self):
         if self.is_active("timeout"):
@@ -121,17 +125,15 @@ class Timer(Node):
             else:
                 self.ready()
 
-        if self.time_left <= 0:
+        if pygame.time.get_ticks() >= self.destination_time:
             self.emit("timeout")
 
-        self.time_left -= 1
         super().update()
 
-    def ready(self):
-        self.max_value = self.secs * self.window.fps
-        self.time_left = self.max_value
-
-    def get_percent(self):  # From 0 to 1
-        if self.time_left <= 0:
-            return 0
-        return self.time_left / self.max_value
+    def get_percent(self):  # Percent of completion, from 0 to 1
+        result = (pygame.time.get_ticks() - self.init_time) / (self.destination_time - self.init_time)
+        if result > 1:
+            result = 1
+        elif result < 0:
+            result = 0
+        return result
