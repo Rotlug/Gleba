@@ -83,8 +83,6 @@ class Window(Node):
 
     def run(self):
         clock = pygame.time.Clock()
-        for c in self.children:
-            c.ready()
 
         # Game loop
         while self.running:
