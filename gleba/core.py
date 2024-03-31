@@ -19,10 +19,10 @@ class Node:  # The base class for all nodes
         child.parent = self
         child.window = self.window
 
-        child.ready()
-
         self.children.append(child)
-        child.is_ready = True
+        if self.is_ready:
+            child.is_ready = True
+            child.ready()
 
     def remove_self(self):
         self.parent.children.remove(self)
@@ -83,6 +83,8 @@ class Window(Node):
 
     def run(self):
         clock = pygame.time.Clock()
+        for c in self.children:
+            c.ready()
 
         # Game loop
         while self.running:
@@ -106,11 +108,11 @@ class Window(Node):
 class Timer(Node):
     def __init__(self, secs, self_destruct=False):
         super().__init__()
-        self.secs = secs
+        self.secs = secs*2  # Why is x2?
 
         self.self_destruct = self_destruct
-        self.time_left = 0
-        self.max_value = 0
+        self.time_left = -1
+        self.max_value = -1
 
     def update(self):
         if self.is_active("timeout"):
