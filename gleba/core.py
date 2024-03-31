@@ -15,7 +15,7 @@ class Node:  # The base class for all nodes
 
         self.is_ready = False
 
-    def add_child(self, child):
+    def add_child(self, child) -> Node:
         child.parent = self
         child.window = self.window
 
@@ -23,6 +23,8 @@ class Node:  # The base class for all nodes
         if self.is_ready:
             child.is_ready = True
             child.ready()
+
+        return child
 
     def remove_self(self):
         self.parent.children.remove(self)
