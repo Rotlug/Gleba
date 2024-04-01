@@ -12,7 +12,7 @@ class Font:
 
 
 class Text(Node2D):
-    def __init__(self, text, position, font: Font, font_color=Color(255, 255, 255), centered=False):
+    def __init__(self, text, position, font: Font, font_color=Color(255, 255, 255)):
         super().__init__(position)
         self.text = text
         self.font = font
