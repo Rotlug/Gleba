@@ -1,3 +1,5 @@
+import pygame
+
 from gleba.graphics import *
 from copy import copy
 
@@ -42,3 +44,25 @@ class ProgressBar(Node2D):
 
     def set_value(self, val):
         self.foreground.clip.x = (1-val) * self.max_x
+
+
+class Button(Node2D):
+    def __init__(self, position: Point, foreground: Node2D):
+        super().__init__(position)
+        self.foreground = foreground
+        self.hovered = False
+
+    def ready(self):
+        self.add_child(self.foreground)
+
+    def update(self):
+        if self.foreground.surface:  # If the foreground has a surface
+            mouse_pos = get_offset_mouse_position(self.foreground.get_position()).to_tuple()
+            self.hovered = self.foreground.surface.get_rect().collidepoint(mouse_pos)
+
+            # Emit signal on pressed
+            for e in self.window.events:
+                if e.type == pygame.MOUSEBUTTONDOWN and self.hovered:
+                    self.emit("pressed")
+
+        super().update()
