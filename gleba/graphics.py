@@ -81,12 +81,13 @@ class Image(Node2D):
 
         self.path = path
         self.size = size
-        self.img = None
-
-    def ready(self):  # Load Image when ready
         self.img = pygame.image.load(self.path)
 
     def update(self):
         self.surface = self.img
         self.surface = pygame.transform.scale(self.surface, self.size.to_tuple())
         super().update()
+
+    def set_image(self, path):
+        self.img = pygame.image.load(path)
+
