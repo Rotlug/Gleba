@@ -27,6 +27,8 @@ class Node:  # The base class for all nodes
         return child
 
     def remove_self(self):
+        for c in self.children:
+            c.remove_self()
         self.parent.children.remove(self)
 
     def update(self):
