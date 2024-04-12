@@ -90,4 +90,3 @@ class Image(Node2D):
 
     def set_image(self, path):
         self.img = pygame.image.load(path)
-
