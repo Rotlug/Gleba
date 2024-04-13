@@ -19,6 +19,9 @@ class CollisionRect(Node2D):
         super().update()
 
     def get_colliding(self):
+        if self.parent.surface is None:
+            return []
+
         current_cols = []
 
         global collision_objects
