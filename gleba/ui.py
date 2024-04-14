@@ -56,7 +56,14 @@ class Button(Node2D):
     def update(self):
         if self.foreground.surface:  # If the foreground has a surface
             mouse_pos = get_offset_mouse_position(self.foreground.get_position()).to_tuple()
-            self.hovered = self.foreground.surface.get_rect().collidepoint(mouse_pos)
+            is_hovered = self.foreground.surface.get_rect().collidepoint(mouse_pos)
+
+            if is_hovered and not self.hovered:  # Emit mouse_hovered and mouse_exited
+                self.emit("mouse_entered")
+                self.hovered = True
+            elif not is_hovered and self.hovered:
+                self.emit("mouse_exited")
+                self.hovered = False
 
             # Emit signal on pressed
             for e in self.window.events:
