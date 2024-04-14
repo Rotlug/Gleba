@@ -29,21 +29,19 @@ class Text(Node2D):
 
 
 class ProgressBar(Node2D):
-    def __init__(self, position, foreground: Node2D, background: Node2D):
+    def __init__(self, position, sprite: Node2D):
         super().__init__(position)
 
-        self.background = background
-        self.foreground = foreground
+        self.sprite = sprite
 
-        self.foreground.clip = copy(self.foreground.size)
-        self.max_x = foreground.size.x
+        self.sprite.clip = copy(self.sprite.size)
+        self.max_x = sprite.size.x
 
     def ready(self):
-        self.add_child(self.background)
-        self.add_child(self.foreground)
+        self.add_child(self.sprite)
 
     def set_value(self, val):
-        self.foreground.clip.x = (1-val) * self.max_x
+        self.sprite.clip.x = (1-val) * self.max_x
 
 
 class Button(Node2D):
