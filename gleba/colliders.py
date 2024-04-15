@@ -29,8 +29,8 @@ class CollisionRect(Node2D):
             if (col is self) or (col.parent.surface is None):
                 continue
 
-            my_rect: pygame.Rect = self.parent.surface.get_rect().move(self.get_position().to_tuple())
-            collider_rect: pygame.Rect = col.parent.surface.get_rect().move(col.get_position().to_tuple())
+            my_rect: pygame.Rect = self.parent.get_rect()
+            collider_rect: pygame.Rect = col.parent.get_rect()
 
             if my_rect.colliderect(collider_rect):
                 current_cols.append(col)
