@@ -52,6 +52,11 @@ class Node2D(Node):  # Base node for all 2D Objects
         else:
             self.window.screen.blit(self.surface, self.get_position().to_tuple())
 
+    def get_rect(self):
+        if self.centered:
+            return self.surface.get_rect(center=self.get_position().to_tuple())
+        return self.surface.get_rect().move(self.get_position().to_tuple())
+
 
 class Rect(Node2D):
     def __init__(self, position: Point, size: Point, color):
