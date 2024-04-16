@@ -102,9 +102,12 @@ class Window(Node):
             pygame.display.flip()
             clock.tick(self.fps)
 
-    def stop(self):
-        self.running = False
-        self.children = []
+    def set_fullscreen(self, fullscreen):
+        if fullscreen:
+            flags = pygame.FULLSCREEN | pygame.SCALED
+            self.screen = pygame.display.set_mode(self.size.to_tuple(), flags)
+        else:
+            self.screen = pygame.display.set_mode(self.size.to_tuple())
 
 
 class Timer(Node):
