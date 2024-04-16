@@ -45,8 +45,9 @@ class ProgressBar(Node2D):
 
 
 class Button(Node2D):
-    def __init__(self, position: Point, foreground: Node2D):
+    def __init__(self, position: Point, foreground: Node2D, mouse_button=pygame.BUTTON_LEFT):
         super().__init__(position)
+        self.mouse_button = mouse_button
         self.foreground = foreground
         self.hovered = False
 
@@ -68,7 +69,7 @@ class Button(Node2D):
 
             # Emit signal on pressed
             for e in self.window.events:
-                if e.type == pygame.MOUSEBUTTONDOWN and self.hovered:
+                if e.type == pygame.MOUSEBUTTONDOWN and e.button == self.mouse_button and self.hovered:
                     self.emit("pressed")
 
         super().update()
