@@ -27,9 +27,9 @@ class Node:  # The base class for all nodes
         return child
 
     def remove_self(self):
+        self.parent.children.remove(self)
         for c in self.children:
             c.remove_self()
-        self.parent.children.remove(self)
 
     def update(self):
         for child in self.children:
@@ -37,6 +37,8 @@ class Node:  # The base class for all nodes
                 child.update()
 
         for signal in self.signals_to_remove:
+            if signal not in self.active_signals:
+                continue
             self.signals_to_remove.remove(signal)
             self.active_signals.remove(signal)
 
@@ -51,6 +53,15 @@ class Node:  # The base class for all nodes
 
     def is_active(self, signal):
         return signal in self.active_signals
+
+    def get_node(self, path: str):
+        current_node = self
+        nodes = path.split("/")
+        for n in nodes:
+            for child in current_node.children:
+                if child.name == n:
+                    current_node = child
+        return current_node
 
 
 def get_mouse_position():
@@ -81,6 +92,7 @@ class Window(Node):
         pygame.init()
 
         self.running = True
+        self.fullscreen = False
 
         if not mouse_visible:
             pygame.mouse.set_visible(False)
@@ -103,6 +115,7 @@ class Window(Node):
             clock.tick(self.fps)
 
     def set_fullscreen(self, fullscreen):
+        self.fullscreen = fullscreen
         if fullscreen:
             flags = pygame.FULLSCREEN | pygame.SCALED
             self.screen = pygame.display.set_mode(self.size.to_tuple(), flags)

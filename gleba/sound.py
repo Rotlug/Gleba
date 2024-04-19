@@ -4,6 +4,7 @@ pygame.mixer.init()
 
 
 def play(path, volume=1, loop=False):
+    volume -= 0.3  # everything .. .quiet .. mmmmmm
     sound = pygame.mixer.Sound(path)
     loops = 0
 

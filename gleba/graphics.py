@@ -14,6 +14,7 @@ class Node2D(Node):  # Base node for all 2D Objects
         self.centered = False
 
         self.clip = None
+        self.scale = Point(1, 1)
 
     def get_position(self):  # Find the global position of the node on-screen
         pos = Point(0, 0)
@@ -44,6 +45,10 @@ class Node2D(Node):  # Base node for all 2D Objects
         # If clip is defined, clip the surface
         if self.clip:
             self.surface = self.surface.subsurface((0, 0, self.clip.x, self.clip.y))
+
+        # Scale the surface
+        if self.scale.x != 1 and self.scale.y != 1:
+            self.surface = pygame.transform.scale_by(self.surface, self.scale.to_tuple())
 
         # If the rect variable is defined, render using that, if not, just render using the position.
         if self.centered:
@@ -81,12 +86,16 @@ class BackgroundColor(Node):
 
 
 class Image(Node2D):
-    def __init__(self, path: str, position: Point, size: Point):
+    def __init__(self, path: str, position, size=Point(-1, -1)):
         super().__init__(position)
 
         self.path = path
-        self.size = size
+
         self.img = pygame.image.load(self.path)
+        if size.x == -1:
+            self.size = Point(self.img.get_size()[0], self.img.get_size()[1])
+        else:
+            self.size = size
 
     def update(self):
         self.surface = self.img

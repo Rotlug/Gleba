@@ -41,7 +41,12 @@ class ProgressBar(Node2D):
         self.add_child(self.sprite)
 
     def set_value(self, val):
-        self.sprite.clip.x = (1-val) * self.max_x
+        if val > 1:
+            val = 1
+        elif val < 0:
+            val = 0
+
+        self.sprite.clip.x = val * self.max_x
 
 
 class Button(Node2D):

@@ -12,7 +12,8 @@ class CollisionRect(Node2D):
         collision_objects.append(self)
 
     def remove_self(self):
-        collision_objects.remove(self)
+        if self in collision_objects:
+            collision_objects.remove(self)
         super().remove_self()
 
     def update(self):
